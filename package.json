@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "npx tsc",
-    "start": "nodemon index.js",
-    "dev": "npx tsc && node index.js"
+    "start": "nodemon ./build/index.js",
+    "dev": "npx tsc && node ./build/index.js"
   }
 }
