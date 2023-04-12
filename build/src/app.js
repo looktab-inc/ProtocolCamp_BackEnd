@@ -5,10 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
-const port = 8000;
+const PORT = 8000;
 app.get('/', (req, res) => {
-    return res.send('Ts + Node.js + Express server running');
+    res.send('Welcome to express server based typescript!');
 });
-app.listen(port, () => {
-    console.log(`server is running on port ${port}`);
+app.listen(PORT, () => {
+    console.log(`Server is running on ${PORT} port`);
 });
