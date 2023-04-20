@@ -18,6 +18,8 @@
     "express": "^4.18.2"
   },
   "dependencies": {
-    "cors": "^2.8.5"
+    "@types/mysql": "^2.15.21",
+    "cors": "^2.8.5",
+    "mysql": "^2.18.1"
   }
 }
