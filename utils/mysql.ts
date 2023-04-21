@@ -18,7 +18,7 @@ function mysqlQuery(query: string, callback: (data: any) => void) {
   connection.end();
 }
 
-const mysqlQueryPromise = (query: string) => {
+const mysqlQueryPromise = (query: string): Promise<any[]> => {
   return new Promise((res, rej) => {
     mysqlQuery(query, (data) => {
       if (data) res(data);
