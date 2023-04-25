@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const test_1 = __importDefault(require("./api/test"));
 const store_1 = __importDefault(require("./api/store"));
 const campaign_1 = __importDefault(require("./api/campaign"));
+const user_1 = __importDefault(require("./api/user"));
 const patchNfts_1 = __importDefault(require("../functions/api/nfts/patchNfts"));
 const router = express_1.default.Router();
 // API root
@@ -18,4 +19,5 @@ router.use('/test', test_1.default);
 router.use('/store', store_1.default);
 router.use('/campaign', campaign_1.default);
 router.use('/nfts', patchNfts_1.default);
+router.use('/user', user_1.default);
 exports.default = router;

@@ -18,8 +18,13 @@
     "express": "^4.18.2"
   },
   "dependencies": {
+    "@solana/web3.js": "^1.75.0",
     "@types/mysql": "^2.15.21",
+    "base58-js": "^2.0.0",
+    "bs58": "^5.0.0",
     "cors": "^2.8.5",
-    "mysql": "^2.18.1"
+    "dotenv": "^16.0.3",
+    "mysql": "^2.18.1",
+    "uuid-apikey": "^1.5.3"
   }
 }
