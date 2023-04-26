@@ -8,14 +8,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const responseMsg_1 = require("../../../../utils/responseMsg");
+const mysql_1 = __importDefault(require("../../../../utils/mysql"));
 const getStore = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { address } = req.params;
     if (!address) {
         return res.status(400).send(responseMsg_1.responseMsg[400]);
     }
     // get store data by address
-    return res.send();
+    const getStoreRes = yield (0, mysql_1.default)(`select * from Store where name='${address}'`);
+    if (!getStoreRes)
+        return res.status(500).send('Error');
+    return res.send(getStoreRes);
 });
 exports.default = getStore;
