@@ -1,13 +1,11 @@
-import createForm from '../interface/queryCreate';
+import { createForm, getUserForm } from '../interface/queryCreate';
 import mysqlQueryPromise from './mysql';
 
-const findRecord = async (
-  table: string,
-  column: string,
-  value: string
-): Promise<any[]> => {
+const findRecord = async (data: getUserForm): Promise<any[]> => {
   const res = await mysqlQueryPromise(
-    `select * from ${table} where ${column}='${value}'`
+    `select * from ${data.table} where ${data.column.join(
+      ' '
+    )}='${data.value.join(' ')}'`
   );
   if (res.length != 0) return res;
   return [];

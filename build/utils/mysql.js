@@ -9,7 +9,6 @@ const password = 'alstjq12345';
 const host = 'natreeumrdsdb.cji70q1ht1ko.ap-northeast-2.rds.amazonaws.com';
 const port = '3306';
 const database = 'natreeumDB';
-const connection = mysql_1.default.createConnection(`mysql://${user}:${password}@${host}:${port}/${database}`);
 // const connection = mysql.createConnection({
 //   user: 'admin',
 //   password: 'alstjq12345',
@@ -23,19 +22,24 @@ const connection = mysql_1.default.createConnection(`mysql://${user}:${password}
 //   console.log('Info : ', rows);
 // });
 // connection.end();
-function mysqlQuery(query) {
+function mysqlQuery(query, callback) {
+    const connection = mysql_1.default.createConnection(`mysql://${user}:${password}@${host}:${port}/${database}`);
     connection.connect();
-    let data;
-    function setData(pdata) {
-        data = pdata;
-    }
     connection.query(query, (err, rows, fields) => {
         if (err)
             throw err;
-        setData(rows);
-        console.log(rows);
+        callback(rows);
     });
     connection.end();
-    return data;
 }
-console.log(mysqlQuery('SELECT * from Store'));
+const mysqlQueryPromise = (query) => {
+    return new Promise((res, rej) => {
+        mysqlQuery(query, (data) => {
+            if (data)
+                res(data);
+            else
+                rej(null);
+        });
+    });
+};
+exports.default = mysqlQueryPromise;

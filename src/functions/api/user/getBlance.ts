@@ -2,7 +2,8 @@ import * as sol3 from '@solana/web3.js';
 import { Request, Response } from 'express';
 import solanaClusterRPCEndpoints from '../../../../utils/solanaClusterRPCEndpoints';
 
-const web3 = new sol3.Connection(solanaClusterRPCEndpoints.devnet);
+const network = 'devnet';
+const web3 = new sol3.Connection(solanaClusterRPCEndpoints[network]);
 
 export async function getBalance(req: Request, res: Response) {
   try {
@@ -11,7 +12,7 @@ export async function getBalance(req: Request, res: Response) {
 
     const pukey = new sol3.PublicKey(pubkey);
     const bal = await web3.getBalance(pukey);
-    return res.send({ balnace: bal });
+    return res.send({ network, balnace: bal });
   } catch (e) {
     return res
       .status(400)
