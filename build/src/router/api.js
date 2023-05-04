@@ -14,7 +14,6 @@ const router = express_1.default.Router();
 router.get('/', (req, res) => {
     res.send('This is API Root');
 });
-// test routing
 router.use('/test', test_1.default);
 router.use('/store', store_1.default);
 router.use('/campaign', campaign_1.default);
