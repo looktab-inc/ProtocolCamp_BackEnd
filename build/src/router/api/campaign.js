@@ -17,9 +17,9 @@ const getCampaign_1 = __importDefault(require("../../functions/api/campaign/getC
 const postCampaign_1 = __importDefault(require("../../functions/api/campaign/postCampaign"));
 const router = express_1.default.Router();
 router.get('/:address', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    (0, getCampaign_1.default)(req, res);
+    return yield (0, getCampaign_1.default)(req, res);
 }));
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    (0, postCampaign_1.default)(req, res);
+    return yield (0, postCampaign_1.default)(req, res);
 }));
 exports.default = router;

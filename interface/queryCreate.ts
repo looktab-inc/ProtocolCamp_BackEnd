@@ -5,6 +5,5 @@ export interface createForm {
 
 export interface getUserForm {
   table: string;
-  column: string[];
-  value: string[];
+  data: object;
 }

@@ -3,9 +3,9 @@ import mysqlQueryPromise from './mysql';
 
 const findRecord = async (data: getUserForm): Promise<any[]> => {
   const res = await mysqlQueryPromise(
-    `select * from ${data.table} where ${data.column.join(
+    `select * from ${data.table} where ${Object.keys(data.data).join(
       ' '
-    )}='${data.value.join(' ')}'`
+    )}='${Object.values(data.data).join(' ')}'`
   );
   if (res.length != 0) return res;
   return [];
@@ -13,7 +13,7 @@ const findRecord = async (data: getUserForm): Promise<any[]> => {
 
 /**
  *
- * @param data {table : string, data:{column, value}}
+ * @param data { data : {table : string, data : {}}}
  * @returns
  */
 const createRecord = async (data: createForm): Promise<any[]> => {

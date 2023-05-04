@@ -18,12 +18,12 @@ const getStore_1 = __importDefault(require("../../functions/api/store/getStore")
 const patchStore_1 = __importDefault(require("../../functions/api/store/patchStore"));
 const router = express_1.default.Router();
 router.get('/:address', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, getStore_1.default)(req, res);
+    return yield (0, getStore_1.default)(req, res);
 }));
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, postStore_1.default)(req, res);
+    return yield (0, postStore_1.default)(req, res);
 }));
 router.patch('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, patchStore_1.default)(req, res);
+    return yield (0, patchStore_1.default)(req, res);
 }));
 exports.default = router;

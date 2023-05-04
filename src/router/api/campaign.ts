@@ -5,10 +5,11 @@ import postCampaign from '../../functions/api/campaign/postCampaign';
 const router: Router = express.Router();
 
 router.get('/:address', async (req: Request, res: Response) => {
-  getCampaign(req, res);
+  return await getCampaign(req, res);
 });
+
 router.post('/', async (req: Request, res: Response) => {
-  postCampaign(req, res);
+  return await postCampaign(req, res);
 });
 
 export default router;
