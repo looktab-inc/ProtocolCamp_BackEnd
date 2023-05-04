@@ -12,9 +12,8 @@ export async function createUser(req: Request, res: Response) {
 
   try {
     const getUserRes = await findRecord({
-      table: 'user',
-      column: ['email'],
-      value: [user_id],
+      table: 'Users',
+      data: {},
     });
     if (getUserRes.length != 0) return res.send('user email exists');
   } catch (e) {
