@@ -22,7 +22,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     !req.headers['content-type'] ||
     req.headers['content-type'] !== 'application/json'
   )
-    return res.status(400).send('Bad Request');
+    return res.status(400).send('Bad Request(Maybe not including api-key)');
   if (apiAuth(req)) {
     return res.status(401).send('Unauthorized');
   } else next();
@@ -34,6 +34,11 @@ app.get('/', (req: Request, res: Response) => {
 
 // API Router
 app.use('/api', apiRouter);
+
+// Handle Unknown
+app.use((req, res, next) => {
+  return res.sendStatus(404);
+});
 
 // Run
 app.listen(PORT, () => {

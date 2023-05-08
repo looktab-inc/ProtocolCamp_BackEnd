@@ -3,7 +3,7 @@ export interface createForm {
   data: object;
 }
 
-export interface getUserForm {
+export interface findForm {
   table: string;
   data: object;
 }
