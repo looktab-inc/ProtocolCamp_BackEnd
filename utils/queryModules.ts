@@ -1,7 +1,7 @@
-import { createForm, getUserForm } from '../interface/queryCreate';
+import { createForm, findForm } from '../interface/queryCreate';
 import mysqlQueryPromise from './mysql';
 
-const findRecord = async (data: getUserForm): Promise<any[]> => {
+const findRecord = async (data: findForm): Promise<any[]> => {
   const res = await mysqlQueryPromise(
     `select * from ${data.table} where ${Object.keys(data.data).join(
       ' '
@@ -16,7 +16,7 @@ const findRecord = async (data: getUserForm): Promise<any[]> => {
  * @param data { data : {table : string, data : {}}}
  * @returns
  */
-const createRecord = async (data: createForm): Promise<any[]> => {
+const createRecord = async (data: createForm): Promise<any> => {
   const keys = Object.keys(data.data);
   const values = Object.values(data.data);
   if (keys.length != values.length)
@@ -24,7 +24,7 @@ const createRecord = async (data: createForm): Promise<any[]> => {
 
   try {
     await mysqlQueryPromise(
-      `insert into ${data.table} value (${Object.values(data.data)
+      `insert into ${data.table} (${keys.join(',')}) value (${values
         .map((el) => {
           if (typeof el === 'string') return `'${el}'`;
           if (typeof el === 'number') return el;
