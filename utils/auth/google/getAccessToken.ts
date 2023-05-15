@@ -1,5 +1,5 @@
 import axios from 'axios';
-import google from './googleOAuth';
+import google from './googleOAuthVals';
 export default async (code: string) => {
   try {
     const apiRes = await axios.post(

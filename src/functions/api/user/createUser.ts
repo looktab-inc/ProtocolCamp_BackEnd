@@ -42,7 +42,7 @@ export async function createUser(req: Request, res: Response) {
         user_id: createRecRes.id,
         username: createRecRes.username,
         email: createRecRes.email,
-        pubKey: createRecRes.public_key,
+        pub_key: createRecRes.public_key,
       });
   } catch (e) {
     console.log('error');

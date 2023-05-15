@@ -1,6 +1,11 @@
 import { createForm, findForm } from '../interface/queryCreate';
 import mysqlQueryPromise from './mysql';
 
+/**
+ *
+ * @param data {table : string, data:{column:value}}
+ * @returns
+ */
 const findRecord = async (data: findForm): Promise<any[]> => {
   const res = await mysqlQueryPromise(
     `select * from ${data.table} where ${Object.keys(data.data).join(
