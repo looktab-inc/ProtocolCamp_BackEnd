@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import getAccessToken from '../../../../utils/auth/google/getAccessToken';
+import getAccessToken from '../../../utils/auth/google/getAccessToken';
 import dotenv from 'dotenv';
-import getUserInfo from '../../../../utils/auth/google/getUserInfo';
-import { signJWT } from '../../../../utils/auth/JWT';
+import getUserInfo from '../../../utils/auth/google/getUserInfo';
+import { signJWT } from '../../../utils/auth/jwt';
 dotenv.config();
 
 export async function googleJWT(req: Request, res: Response) {

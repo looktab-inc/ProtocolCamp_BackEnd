@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -12,12 +13,18 @@ export const signJWT = (payload: object | string) => {
   return newJWT;
 };
 
+// Get token from request header.
 // If token is valid, return payload.
-export const verifyJWT = (token: string) => {
+export const verifyJWT = (req: Request) => {
+  const token = req.headers['authorization'];
+  if (!token) return false;
+
   try {
     const payload = jwt.verify(token, JWT_SECRET);
+    if (Object.keys(payload).length !== 3) throw 'invalid token';
     return payload;
   } catch (e) {
+    if (e === 'invalid token') console.log(e);
     return false;
   }
 };

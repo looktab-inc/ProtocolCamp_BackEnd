@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import google from '../../../utils/auth/google/googleOAuth';
+import google from '../../../utils/auth/google/googleOAuthVals';
 
 const router: Router = express.Router();
 
