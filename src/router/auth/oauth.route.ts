@@ -1,8 +1,8 @@
 import express, { Router } from 'express';
-import { googleJWT } from '../../functions/auth/googlejwt';
+import { oauth } from '../../functions/auth/oauth';
 
 const router: Router = express.Router();
 
-router.route('/').get(googleJWT);
+router.route('/').get(oauth);
 
 export default router;
