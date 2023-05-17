@@ -2,7 +2,7 @@ import { Response, Request } from 'express';
 import * as sol3 from '@solana/web3.js';
 import * as bs58 from 'bs58';
 import { createRecord, findRecord } from '../../../../utils/queryModules';
-import { generateCode } from '../../../../utils/generateUserCode';
+import { generateCode } from '../../../../utils/generateCode';
 
 export async function createUser(req: Request, res: Response) {
   const { email, username } = req.body;
