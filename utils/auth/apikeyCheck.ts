@@ -3,11 +3,11 @@ import uuidAPIKey from 'uuid-apikey';
 
 export default function apiAuth(req: Request) {
   const apikey = req.headers.authorization;
+  const keyRes = uuidAPIKey.check(apikey || '', process.env.UUID || '');
   try {
-    const checkRes =
-      !apikey || !uuidAPIKey.check(apikey, process.env.UUID || '');
+    const checkRes = !apikey || keyRes;
     return checkRes;
   } catch (e) {
-    return true;
+    return false;
   }
 }
