@@ -1,4 +1,4 @@
-import { createForm, findForm } from '../interface/queryCreate';
+import { createForm, findForm, updateForm } from '../interface/queryCreate';
 import mysqlQueryPromise from './mysql';
 
 /**
@@ -28,7 +28,7 @@ const createRecord = async (data: createForm): Promise<any> => {
     throw new Error(`Columns and Values are not matching`);
 
   try {
-    const query = `insert into ${data.table} (${keys.join(
+    const query = `insert into \`${data.table}\` (${keys.join(
       ','
     )}) values (${values
       .map((el) => {
@@ -39,7 +39,7 @@ const createRecord = async (data: createForm): Promise<any> => {
 
     await mysqlQueryPromise(query);
     const res = await mysqlQueryPromise(
-      `select * from ${data.table} where ${Object.entries(data.data)
+      `select * from \`${data.table}\` where ${Object.entries(data.data)
         .map((e): string | any => {
           if (typeof e[1] === 'string') return `${e[0]}='${e[1]}'`;
           else if (typeof e[1] === 'number') return `${e[0]}=${e[1]}`;
@@ -52,4 +52,22 @@ const createRecord = async (data: createForm): Promise<any> => {
   }
 };
 
-export { findRecord, createRecord };
+const updateRecord = async (data: updateForm) => {
+  try {
+    const table = data.table;
+    const updateData = data.data;
+    const where = data.where;
+    const query = `UPDATE \`${table}\` SET ${Object.entries(updateData).map(
+      (e) => `${e[0]}=${typeof e[1] == 'string' ? `'${e[1]}'` : e[1]}`
+    )} WHERE ${Object.entries(where).map(
+      (e) => `${e[0]}=${typeof e[1] == 'string' ? `'${e[1]}'` : e[1]}`
+    )}`;
+
+    const queryRes = await mysqlQueryPromise(query);
+    return queryRes;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export { findRecord, createRecord, updateRecord };
