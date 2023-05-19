@@ -10,7 +10,7 @@ router.get('/', (req: Request, res: Response) => {
 });
 
 // GET
-router.route('/sol/:email').get(getBalance);
+router.route('/sol/:user_id').get(getBalance);
 router.route('/username/:username').get(getUsername);
 
 // POST
