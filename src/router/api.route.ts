@@ -20,8 +20,13 @@ const router: Router = express.Router();
 import { verifyJWT } from '../../utils/auth/jwt';
 router.use((req: Request, res: Response, next: NextFunction) => {
   const verificationRes = verifyJWT(req);
-  if (verificationRes) next();
-  else return res.status(401).send('Unauthorized');
+  if (verificationRes.status) next();
+  else if (
+    !verificationRes.status &&
+    verificationRes.code === 'TokenExpiredError'
+  ) {
+    return res.status(401).send('AccessTokenExpired');
+  } else return res.status(401).send('Unauthorized');
 });
 
 const routersDir = __filename.split('.')[0];
