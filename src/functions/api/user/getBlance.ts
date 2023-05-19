@@ -9,14 +9,17 @@ const web3 = new sol3.Connection(solanaClusterRPCEndpoints[network]);
 export async function getBalance(req: Request, res: Response) {
   try {
     // const pubkey =
-    const email = req.params.email;
-    if (!email) return res.status(400).send('Bad Request');
+    const user_id = req.params.user_id;
+    if (!user_id) return res.status(400).send('Bad Request');
 
-    const [getUserRes] = await findRecord({ table: 'Users', data: { email } });
+    const [getUserRes] = await findRecord({
+      table: 'Users',
+      data: { id: user_id },
+    });
 
     // handling no email error
     if (!getUserRes)
-      return res.status(404).send('No Matching User with email : ' + email);
+      return res.status(404).send('No Matching User with email : ' + user_id);
 
     const pubkey = getUserRes.public_key;
 
