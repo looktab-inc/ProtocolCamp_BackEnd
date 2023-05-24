@@ -1,4 +1,6 @@
-import mysql from 'mysql';
+import mysql from "mysql";
+import dotenv from "dotenv";
+dotenv.config();
 
 const user = process.env.DB_USER;
 const password = process.env.DB_PW;
@@ -17,6 +19,7 @@ function mysqlQuery(query: string, callback: (data: any) => void) {
   });
   connection.end();
 }
+
 
 const mysqlQueryPromise = (query: string): Promise<any[]> => {
   return new Promise((res, rej) => {
