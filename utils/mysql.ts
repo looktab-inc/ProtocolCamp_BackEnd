@@ -1,27 +1,12 @@
-import mysql from 'mysql';
+import mysql from "mysql";
+import dotenv from "dotenv";
+dotenv.config();
 
-const user = 'admin';
-const password = 'alstjq12345';
-const host = 'natreeumrdsdb.cji70q1ht1ko.ap-northeast-2.rds.amazonaws.com';
-const port = '3306';
-const database = 'natreeumDB';
-
-// const connection = mysql.createConnection({
-//   user: 'admin',
-//   password: 'alstjq12345',
-//   host: 'natreeumrdsdb.cji70q1ht1ko.ap-northeast-2.rds.amazonaws.com',
-//   port: 3306,
-//   database: 'natreeumDB',
-// });
-
-// connection.connect();
-
-// connection.query('SELECT * from Store', (err, rows, fields) => {
-//   if (err) throw err;
-//   console.log('Info : ', rows);
-// });
-
-// connection.end();
+const user = process.env.DB_USER;
+const password = process.env.DB_PW;
+const host = process.env.DB_HOST;
+const port = process.env.DB_PORT;
+const database = process.env.DB_NAME;
 
 function mysqlQuery(query: string, callback: (data: any) => void) {
   const connection = mysql.createConnection(
