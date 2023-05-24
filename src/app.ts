@@ -1,15 +1,17 @@
-import express, { Express, NextFunction, Request, Response } from 'express';
-import dotenv from 'dotenv';
-import cors from 'cors';
-import logger from 'morgan';
-import fs from 'fs';
+import express, { Express, NextFunction, Request, Response } from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import logger from "morgan";
+import fs from "fs";
+import cron from "node-cron";
+import likeCountReset from "../cron/likeCountReset";
 
 dotenv.config();
 
 const app: Express = express();
 const PORT = 8000;
 
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,16 +28,16 @@ app.use(express.urlencoded({ extended: true }));
 //   } else next();
 // });
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('TINJI API SERVER');
+app.get("/", (req: Request, res: Response) => {
+  res.send("TINJI API SERVER");
 });
 
 // Load Routers
-const routeDir = __dirname + '/router';
+const routeDir = __dirname + "/router";
 fs.readdirSync(routeDir)
-  .filter((f) => f.indexOf('.') !== 0 && f.slice(-9) === '.route.ts')
+  .filter((f) => f.indexOf(".") !== 0 && f.slice(-9) === ".route.ts")
   .forEach((r) => {
-    app.use(`/${r.split('.')[0]}`, require(`${routeDir}/${r}`).default);
+    app.use(`/${r.split(".")[0]}`, require(`${routeDir}/${r}`).default);
   });
 
 // Handle Unknown Request
@@ -46,4 +48,9 @@ app.use((req, res, next) => {
 // Run Server
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT} port`);
+});
+
+cron.schedule("0 0 * * *", async () => {
+  await likeCountReset();
+  console.log("All Like count has been reset");
 });
