@@ -3,3 +3,4 @@ test.js
 test.ts
 build
 .env
+.DS_Store
