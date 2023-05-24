@@ -3,5 +3,5 @@
 - copy .env.example to .env
 - fill out the .env
 
-<code>npm install</code>
+<code>npm install</code></br>
 <code>npm run dev</code>
