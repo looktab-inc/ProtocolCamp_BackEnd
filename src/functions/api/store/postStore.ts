@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
-import { responseMsg } from '../../../../utils/responseMsg';
-import { createRecord } from '../../../../utils/queryModules';
-import { generateCode } from '../../../../utils/generateCode';
+import { Request, Response } from "express";
+import { responseMsg } from "../../../../utils/responseMsg";
+import { createRecord } from "../../../../utils/queryModules";
+import { generateCode } from "../../../../utils/generateCode";
 const postStore = async (req: Request, res: Response) => {
   const {
     name,
@@ -25,8 +25,8 @@ const postStore = async (req: Request, res: Response) => {
       address &&
       nft_address &&
       image &&
-      latitude &&
-      longitude &&
+      (latitude !== null || latitude !== undefined) &&
+      (longitude !== null || latitude !== undefined) &&
       open_time &&
       close_time
     )
@@ -36,7 +36,7 @@ const postStore = async (req: Request, res: Response) => {
 
   try {
     const db_res = await createRecord({
-      table: 'Store',
+      table: "Store",
       data: {
         id: await generateCode(),
         name,
@@ -54,21 +54,23 @@ const postStore = async (req: Request, res: Response) => {
     });
 
     const result = {
+      id: db_res.id,
       name: db_res.name,
       description: db_res.description,
       address: db_res.address,
-      how_to_reach: db_res[how_to_reach],
+      how_to_reach: db_res["how_to_reach"],
       lat: db_res.latitude,
       lng: db_res.longitude,
       open_time: db_res.open_time,
       close_time: db_res.close_time,
       close_days: db_res.close_days,
+      img: db_res.image,
     };
 
     return res.status(201).send(result);
   } catch (e) {
     console.log(e);
-    return res.status(500).send('Error');
+    return res.status(500).send("Error");
   }
 };
 
