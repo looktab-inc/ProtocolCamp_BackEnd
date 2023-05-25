@@ -1,2 +1,2 @@
-export { NftAmount } from "./NftAmount";
-export type { NftAmountFields, NftAmountJSON } from "./NftAmount";
+export { NftAmount } from "./NftAmount"
+export type { NftAmountFields, NftAmountJSON } from "./NftAmount"
