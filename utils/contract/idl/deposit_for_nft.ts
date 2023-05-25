@@ -1,463 +1,493 @@
 export type DepositForNft = {
-  version: "0.1.0";
-  name: "deposit_for_nft";
-  instructions: [
+  "version": "0.1.0",
+  "name": "deposit_for_nft",
+  "instructions": [
     {
-      name: "initialize";
-      accounts: [
+      "name": "initialize",
+      "accounts": [
         {
-          name: "bankAccount";
-          isMut: true;
-          isSigner: true;
+          "name": "bankAccount",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "pdaAuth";
-          isMut: false;
-          isSigner: false;
+          "name": "pdaAuth",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "bankAuth";
-          isMut: true;
-          isSigner: true;
+          "name": "bankAuth",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": []
     },
     {
-      name: "depositForNft";
-      accounts: [
+      "name": "depositForNft",
+      "accounts": [
         {
-          name: "bankAccount";
-          isMut: true;
-          isSigner: false;
+          "name": "bankAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "pdaAuth";
-          isMut: false;
-          isSigner: false;
+          "name": "pdaAuth",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "solVault";
-          isMut: true;
-          isSigner: false;
+          "name": "solVault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "bankAuth";
-          isMut: true;
-          isSigner: true;
+          "name": "bankAuth",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": []
     },
     {
-      name: "withdrawForBurned";
-      accounts: [
+      "name": "withdrawForBurned",
+      "accounts": [
         {
-          name: "bankAccount";
-          isMut: false;
-          isSigner: false;
+          "name": "bankAccount",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "pdaAuth";
-          isMut: false;
-          isSigner: false;
+          "name": "pdaAuth",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "solVault";
-          isMut: true;
-          isSigner: false;
+          "name": "solVault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "bankAuth";
-          isMut: true;
-          isSigner: true;
+          "name": "bankAuth",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "clientAccount";
-          isMut: true;
-          isSigner: false;
+          "name": "clientAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recommenderAccount",
+          "isMut": true,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": []
     },
     {
-      name: "withdrawForExpired";
-      accounts: [
+      "name": "withdrawForExpired",
+      "accounts": [
         {
-          name: "bankAccount";
-          isMut: false;
-          isSigner: false;
+          "name": "bankAccount",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "pdaAuth";
-          isMut: false;
-          isSigner: false;
+          "name": "pdaAuth",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "solVault";
-          isMut: true;
-          isSigner: false;
+          "name": "solVault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "bankAuth";
-          isMut: true;
-          isSigner: true;
+          "name": "bankAuth",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "clientAccount";
-          isMut: true;
-          isSigner: false;
+          "name": "clientAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recommenderAccount",
+          "isMut": true,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": []
     },
     {
-      name: "withdrawForVerified";
-      accounts: [
+      "name": "withdrawForVerified",
+      "accounts": [
         {
-          name: "bankAccount";
-          isMut: false;
-          isSigner: false;
+          "name": "bankAccount",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "pdaAuth";
-          isMut: false;
-          isSigner: false;
+          "name": "pdaAuth",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "solVault";
-          isMut: true;
-          isSigner: false;
+          "name": "solVault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "bankAuth";
-          isMut: true;
-          isSigner: true;
+          "name": "bankAuth",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "clientAccount";
-          isMut: true;
-          isSigner: false;
+          "name": "clientAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recommenderAccount",
+          "isMut": true,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": []
     }
-  ];
-  accounts: [
+  ],
+  "accounts": [
     {
-      name: "bankAccount";
-      type: {
-        kind: "struct";
-        fields: [
+      "name": "bankAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "bankAuth";
-            type: "publicKey";
+            "name": "bankAuth",
+            "type": "publicKey"
           },
           {
-            name: "authBump";
-            type: "u8";
+            "name": "authBump",
+            "type": "u8"
           },
           {
-            name: "solVaultBump";
-            type: {
-              option: "u8";
-            };
+            "name": "solVaultBump",
+            "type": {
+              "option": "u8"
+            }
           },
           {
-            name: "nftAmount";
-            type: {
-              defined: "NftAmount";
-            };
+            "name": "nftAmount",
+            "type": {
+              "defined": "NftAmount"
+            }
           }
-        ];
-      };
+        ]
+      }
     }
-  ];
-  types: [
+  ],
+  "types": [
     {
-      name: "NftAmount";
-      type: {
-        kind: "struct";
-        fields: [
+      "name": "NftAmount",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "total";
-            type: "u16";
+            "name": "total",
+            "type": "u16"
           },
           {
-            name: "remained";
-            type: "u16";
+            "name": "remained",
+            "type": "u16"
           }
-        ];
-      };
+        ]
+      }
     }
-  ];
-  errors: [
+  ],
+  "errors": [
     {
-      code: 6000;
-      name: "InitializeError";
-      msg: "Failed to initialize contract.";
+      "code": 6000,
+      "name": "InitializeError",
+      "msg": "Failed to initialize contract."
     },
     {
-      code: 6001;
-      name: "NoNftLeftError";
-      msg: "There is not NFTs left to withdraw sol";
+      "code": 6001,
+      "name": "NoNftLeftError",
+      "msg": "There is not NFTs left to withdraw sol"
     }
-  ];
+  ]
 };
 
 export const IDL: DepositForNft = {
-  version: "0.1.0",
-  name: "deposit_for_nft",
-  instructions: [
+  "version": "0.1.0",
+  "name": "deposit_for_nft",
+  "instructions": [
     {
-      name: "initialize",
-      accounts: [
+      "name": "initialize",
+      "accounts": [
         {
-          name: "bankAccount",
-          isMut: true,
-          isSigner: true,
+          "name": "bankAccount",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "pdaAuth",
-          isMut: false,
-          isSigner: false,
+          "name": "pdaAuth",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "bankAuth",
-          isMut: true,
-          isSigner: true,
+          "name": "bankAuth",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [],
+      "args": []
     },
     {
-      name: "depositForNft",
-      accounts: [
+      "name": "depositForNft",
+      "accounts": [
         {
-          name: "bankAccount",
-          isMut: true,
-          isSigner: false,
+          "name": "bankAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "pdaAuth",
-          isMut: false,
-          isSigner: false,
+          "name": "pdaAuth",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "solVault",
-          isMut: true,
-          isSigner: false,
+          "name": "solVault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "bankAuth",
-          isMut: true,
-          isSigner: true,
+          "name": "bankAuth",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [],
+      "args": []
     },
     {
-      name: "withdrawForBurned",
-      accounts: [
+      "name": "withdrawForBurned",
+      "accounts": [
         {
-          name: "bankAccount",
-          isMut: false,
-          isSigner: false,
+          "name": "bankAccount",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "pdaAuth",
-          isMut: false,
-          isSigner: false,
+          "name": "pdaAuth",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "solVault",
-          isMut: true,
-          isSigner: false,
+          "name": "solVault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "bankAuth",
-          isMut: true,
-          isSigner: true,
+          "name": "bankAuth",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "clientAccount",
-          isMut: true,
-          isSigner: false,
+          "name": "clientAccount",
+          "isMut": true,
+          "isSigner": false
         },
+        {
+          "name": "recommenderAccount",
+          "isMut": true,
+          "isSigner": false
+        }
       ],
-      args: [],
+      "args": []
     },
     {
-      name: "withdrawForExpired",
-      accounts: [
+      "name": "withdrawForExpired",
+      "accounts": [
         {
-          name: "bankAccount",
-          isMut: false,
-          isSigner: false,
+          "name": "bankAccount",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "pdaAuth",
-          isMut: false,
-          isSigner: false,
+          "name": "pdaAuth",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "solVault",
-          isMut: true,
-          isSigner: false,
+          "name": "solVault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "bankAuth",
-          isMut: true,
-          isSigner: true,
+          "name": "bankAuth",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "clientAccount",
-          isMut: true,
-          isSigner: false,
+          "name": "clientAccount",
+          "isMut": true,
+          "isSigner": false
         },
+        {
+          "name": "recommenderAccount",
+          "isMut": true,
+          "isSigner": false
+        }
       ],
-      args: [],
+      "args": []
     },
     {
-      name: "withdrawForVerified",
-      accounts: [
+      "name": "withdrawForVerified",
+      "accounts": [
         {
-          name: "bankAccount",
-          isMut: false,
-          isSigner: false,
+          "name": "bankAccount",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "pdaAuth",
-          isMut: false,
-          isSigner: false,
+          "name": "pdaAuth",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "solVault",
-          isMut: true,
-          isSigner: false,
+          "name": "solVault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "bankAuth",
-          isMut: true,
-          isSigner: true,
+          "name": "bankAuth",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "clientAccount",
-          isMut: true,
-          isSigner: false,
+          "name": "clientAccount",
+          "isMut": true,
+          "isSigner": false
         },
+        {
+          "name": "recommenderAccount",
+          "isMut": true,
+          "isSigner": false
+        }
       ],
-      args: [],
-    },
+      "args": []
+    }
   ],
-  accounts: [
+  "accounts": [
     {
-      name: "bankAccount",
-      type: {
-        kind: "struct",
-        fields: [
+      "name": "bankAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "bankAuth",
-            type: "publicKey",
+            "name": "bankAuth",
+            "type": "publicKey"
           },
           {
-            name: "authBump",
-            type: "u8",
+            "name": "authBump",
+            "type": "u8"
           },
           {
-            name: "solVaultBump",
-            type: {
-              option: "u8",
-            },
+            "name": "solVaultBump",
+            "type": {
+              "option": "u8"
+            }
           },
           {
-            name: "nftAmount",
-            type: {
-              defined: "NftAmount",
-            },
-          },
-        ],
-      },
-    },
+            "name": "nftAmount",
+            "type": {
+              "defined": "NftAmount"
+            }
+          }
+        ]
+      }
+    }
   ],
-  types: [
+  "types": [
     {
-      name: "NftAmount",
-      type: {
-        kind: "struct",
-        fields: [
+      "name": "NftAmount",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "total",
-            type: "u16",
+            "name": "total",
+            "type": "u16"
           },
           {
-            name: "remained",
-            type: "u16",
-          },
-        ],
-      },
-    },
+            "name": "remained",
+            "type": "u16"
+          }
+        ]
+      }
+    }
   ],
-  errors: [
+  "errors": [
     {
-      code: 6000,
-      name: "InitializeError",
-      msg: "Failed to initialize contract.",
+      "code": 6000,
+      "name": "InitializeError",
+      "msg": "Failed to initialize contract."
     },
     {
-      code: 6001,
-      name: "NoNftLeftError",
-      msg: "There is not NFTs left to withdraw sol",
-    },
-  ],
+      "code": 6001,
+      "name": "NoNftLeftError",
+      "msg": "There is not NFTs left to withdraw sol"
+    }
+  ]
 };
