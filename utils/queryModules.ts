@@ -1,5 +1,5 @@
-import { createForm, findForm, updateForm } from '../interface/queryCreate';
-import mysqlQueryPromise from './mysql';
+import { createForm, findForm, updateForm } from "../interface/queryCreate";
+import mysqlQueryPromise from "./mysql";
 
 /**
  *
@@ -9,8 +9,8 @@ import mysqlQueryPromise from './mysql';
 const findRecord = async (data: findForm): Promise<any[]> => {
   const res = await mysqlQueryPromise(
     `select * from ${data.table} where ${Object.keys(data.data).join(
-      ' '
-    )}='${Object.values(data.data).join(' ')}'`
+      " "
+    )}='${Object.values(data.data).join(" ")}'`
   );
   if (res.length != 0) return res;
   return [];
@@ -24,27 +24,34 @@ const findRecord = async (data: findForm): Promise<any[]> => {
 const createRecord = async (data: createForm): Promise<any> => {
   const keys = Object.keys(data.data);
   const values = Object.values(data.data);
+
   if (keys.length != values.length)
     throw new Error(`Columns and Values are not matching`);
 
   try {
-    const query = `insert into \`${data.table}\` (${keys.join(
-      ','
-    )}) values (${values
+    const query = `insert into \`${data.table}\` (${keys
+      .filter((e) => values[keys.indexOf(e)] !== undefined)
+      .join(",")}) values (${values
+      .filter((e) => e !== undefined)
       .map((el) => {
-        if (typeof el === 'string') return `'${el}'`;
-        if (typeof el === 'number') return `${el}`;
+        if (typeof el === "string") return `'${el}'`;
+        if (typeof el === "number") return `${el}`;
       })
-      .join(',')});`;
+      .join(",")});`;
 
     await mysqlQueryPromise(query);
     const res = await mysqlQueryPromise(
-      `select * from \`${data.table}\` where ${Object.entries(data.data)
-        .map((e): string | any => {
-          if (typeof e[1] === 'string') return `${e[0]}='${e[1]}'`;
-          else if (typeof e[1] === 'number') return `${e[0]}=${e[1]}`;
+      `select * from \`${data.table}\` where ${values
+        .filter((e) => e !== undefined)
+        .map((e) => {
+          const idx = values.indexOf(e);
+          if (typeof e === "number") {
+            return `${keys[idx]}=${e}`;
+          } else if (typeof e === "string") {
+            return `${keys[idx]}='${e}'`;
+          }
         })
-        .join(' && ')}`
+        .join(` && `)}`
     );
     return res[0];
   } catch (err) {
@@ -58,9 +65,9 @@ const updateRecord = async (data: updateForm) => {
     const updateData = data.data;
     const where = data.where;
     const query = `UPDATE \`${table}\` SET ${Object.entries(updateData).map(
-      (e) => `${e[0]}=${typeof e[1] == 'string' ? `'${e[1]}'` : e[1]}`
+      (e) => `${e[0]}=${typeof e[1] == "string" ? `'${e[1]}'` : e[1]}`
     )} WHERE ${Object.entries(where).map(
-      (e) => `${e[0]}=${typeof e[1] == 'string' ? `'${e[1]}'` : e[1]}`
+      (e) => `${e[0]}=${typeof e[1] == "string" ? `'${e[1]}'` : e[1]}`
     )}`;
 
     const queryRes = await mysqlQueryPromise(query);
