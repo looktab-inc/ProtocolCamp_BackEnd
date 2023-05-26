@@ -7,8 +7,12 @@ import mysqlQueryPromise from "./mysql";
  * @returns
  */
 const findRecord = async (data: findForm): Promise<any[]> => {
+  if (data.data === undefined) {
+    const res = await mysqlQueryPromise(`select * from \`${data.table}\``);
+    return res;
+  }
   const res = await mysqlQueryPromise(
-    `select * from ${data.table} where ${Object.keys(data.data).join(
+    `select * from \`${data.table}\` where ${Object.keys(data.data).join(
       " "
     )}='${Object.values(data.data).join(" ")}'`
   );
