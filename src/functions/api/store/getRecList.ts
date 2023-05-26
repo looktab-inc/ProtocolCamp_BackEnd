@@ -9,7 +9,7 @@ export default async function getRecList(req: Request, res: Response) {
   if (!(userId && lat && lng && range))
     return res.status(400).send(responseMsg[400]);
 
-  let response = { store: [], like_count: 0 };
+  let response = { store: new Array(0), like_count: 0 };
 
   const [userInfo] = await findRecord({ table: "Users", data: { id: userId } });
   if (userInfo.like_count >= 5) {
@@ -17,7 +17,31 @@ export default async function getRecList(req: Request, res: Response) {
     return res.send(response);
   }
 
-  const stores = await findRecord({ table: "Store" });
+  let stores = await findRecord({ table: "RecommendData" });
 
-  stores.filter((e) => distance(e.latitude, e.longitude, lat, lng) <= range);
+  const newstores: any[] = [];
+  for (let i = 0; i < stores.length; i++) {
+    const [storeInfo] = await findRecord({
+      table: "Store",
+      data: { id: stores[i].store_id },
+    });
+    const dist = distance(storeInfo.latitude, storeInfo.longitude, lat, lng);
+    if (dist < range) newstores.push(stores[i]);
+  }
+
+  let storesCnt = 5;
+  const selectedStores = [];
+  if (newstores.length < storesCnt) {
+    response.store = newstores;
+  } else {
+    while (storesCnt-- !== 0) {
+      selectedStores.push(
+        newstores[Math.floor(Math.random() * newstores.length)]
+      );
+    }
+  }
+
+  response.store = selectedStores;
+
+  return res.send(response);
 }
