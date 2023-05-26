@@ -5,13 +5,16 @@ import {
   findRecord,
   updateRecord,
 } from '../../../../utils/queryModules';
-import { Wallet, web3 } from '@project-serum/anchor';
+import { web3 } from '@project-serum/anchor';
+import * as anchor from "@project-serum/anchor";
 import { TinjiNft } from '../../../../utils/contract/tinjiNft';
 import solanaClusterRPCEndpoints from '../../../../utils/solanaClusterRPCEndpoints';
 import { getTinjiProgram, getTinjiProvider } from '../../../../utils/contract/contractConfig';
 import { TinjiContract } from '../../../../utils/contract/tinjiContract';
 import * as umilib from "@metaplex-foundation/umi";
 import * as fs from "fs";
+import { bs58 } from "@project-serum/anchor/dist/cjs/utils/bytes";
+import mysqlQueryPromise from "../../../../utils/mysql";
 
 export default async function (req: Request, res: Response) {
   const { store_id, user_id, recDataId } = req.body;
@@ -20,6 +23,9 @@ export default async function (req: Request, res: Response) {
   // exception handling : Bad Request
   if (!(store_id && user_id && recDataId))
     return res.status(400).send(responseMsg[400]);
+
+  if (!bankSecret)
+    return res.status(500).send(responseMsg[500]);
 
   try {
     // RecData load
@@ -34,62 +40,74 @@ export default async function (req: Request, res: Response) {
       data: { id: user_id },
     });
 
-    if (bankSecret != undefined) {
-      const bankKeypair = web3.Keypair.fromSecretKey(
-        Uint8Array.from(bankSecret.split(",").map(e=>Number(e)))
-      );
-      console.log(`bankKeypair Public Key: ${bankKeypair.publicKey}`);
-  
-      if(db_read_res.secret_key == null || undefined) {
-        console.log(`User Name '${db_read_res.username}' : can not find wallet info.`);
-        return res.status(500).send('Internal Error');
-      } else if(db_read_res.secret_key.length !== 88) {
-        console.log(`User Name '${db_read_res.username}' : something wrong with key size.`);
-        return res.status(500).send('Internal Error');
-      } else {
-        const tinjiNft = new TinjiNft(solanaClusterRPCEndpoints.devnet, bankKeypair);
-        const clientKeypair = web3.Keypair.fromSecretKey(db_read_res.secret_key);
-        const clientKeypairSigner = tinjiNft.generateSignerKeypair(clientKeypair);
-        console.log(`User Name '${db_read_res.username}' : publicKey = ${clientKeypair.publicKey.toString()}`);
-    
-    
-        // 1. upload File
-        const filePath = "utils/contract/files/";
-        const fileName = "0.png";
-        const fileBuf = fs.readFileSync(filePath + fileName);
-        const fileUri = await tinjiNft.uploadFile(fileBuf,fileName);
-        console.log(`File Uri : ${fileUri}`);
-    
-        // 2. upload Metadate
-        const metadataName = "Test Metadata";
-        const metadataUri = await tinjiNft.uploadMetadata([fileUri], metadataName);
-        console.log(`Metadata Uri : ${metadataUri}`);
-    
-        // 3. mint NFT
-        const mintedNftSigner = await tinjiNft.mintNft(clientKeypairSigner, metadataUri);
-        const mintedNftAddress = umilib.base58PublicKey(mintedNftSigner.publicKey);
-        console.log(`Minted NFT Address : `);
-        console.log(mintedNftAddress);
-
-        // 4. deposit into Contract
-
-        // create record
-        const db_create_res = await createRecord({
-          table: "Like",
-          data: {
-            user_id,
-            store_id,
-            mintedNftAddress,
-          },
-        });
-
-        const db_update_res = await updateRecord({
-          table: "Users",
-          data: { like_count: db_read_res.like_count + 1 },
-          where: { id: user_id },
-        });
-      }
+    const bankKeypair = web3.Keypair.fromSecretKey(
+      Uint8Array.from(bankSecret.split(",").map(e=>Number(e)))
+    );
+    const userSecrectString: string = db_read_res.secret_key;
+    if(!userSecrectString || userSecrectString.length !== 88) {
+      console.log(`User Name '${db_read_res.username}' : can not find wallet info.`);
+      return res.status(500).send('Internal Error');
     }
+
+    // Tinji NFT
+    const tinjiNft = new TinjiNft(solanaClusterRPCEndpoints.devnet, bankKeypair);
+    const clientKeypair = web3.Keypair.fromSecretKey(bs58.decode(userSecrectString));
+    const clientKeypairSigner = tinjiNft.generateSignerKeypair(clientKeypair);
+    console.log(`User Name '${db_read_res.username}' : publicKey = ${clientKeypair.publicKey.toString()}`);
+
+    // 1. upload File
+    const imgFilePath = recData.img1;
+    const temp = imgFilePath.split("/");
+    const fileName = temp[temp.length - 1];
+    console.log(`file Name : ${fileName}`);
+
+    const fileBuf = fs.readFileSync(imgFilePath);
+    const fileUri = await tinjiNft.uploadFile(fileBuf, fileName);
+    console.log(`File Uri : ${fileUri}`);
+
+    // 2. upload Metadate
+    const metadataName = "Test Metadata";
+    const metadataUri = await tinjiNft.uploadMetadata([fileUri], metadataName);
+    console.log(`Metadata Uri : ${metadataUri}`);
+
+    // 3. mint NFT
+    const mintedNftSigner = await tinjiNft.mintNft(clientKeypairSigner, metadataUri);
+    const nft_address = umilib.base58PublicKey(mintedNftSigner.publicKey);
+    console.log(`Minted NFT Address : `);
+    console.log(nft_address);
+
+    // 4. deposit into Contract
+    const tinjiProvider = await getTinjiProvider(
+      new anchor.Wallet(bankKeypair), 
+      solanaClusterRPCEndpoints.devnet
+    );
+    const tinjiProgram = await getTinjiProgram(tinjiProvider);
+    const tinjiContract = new TinjiContract(tinjiProvider, tinjiProgram, bankKeypair);
+
+    const selectBankAccountQuery = `select * from BankAccount where deposit_count > withdraw_count limit 1;`
+    const [ bankAccountData ] = await mysqlQueryPromise(selectBankAccountQuery);
+    const bankAccountAddress = bankAccountData.account_address;
+
+    const txSig = await tinjiContract.depositForNFT(new web3.PublicKey(bankAccountAddress));
+
+    const plusDepositQuery = `update BankAccount SET deposit_count = deposit_count + 1 where account_address = '${bankAccountAddress}'`;
+    const plusResult = await mysqlQueryPromise(plusDepositQuery);
+
+    // create record
+    const db_create_res = await createRecord({
+      table: "Like",
+      data: {
+        user_id,
+        store_id,
+        nft_address,
+      },
+    });
+
+    const db_update_res = await updateRecord({
+      table: "Users",
+      data: { like_count: db_read_res.like_count + 1 },
+      where: { id: user_id },
+    });
 
   } catch (e) {
     console.log(e);
