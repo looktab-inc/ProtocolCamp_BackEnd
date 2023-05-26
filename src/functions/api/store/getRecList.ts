@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
 import { responseMsg } from "../../../../utils/responseMsg";
 import { findRecord } from "../../../../utils/queryModules";
+import distance from "../../../../utils/calcDistance";
 
 export default async function getRecList(req: Request, res: Response) {
   const userId = req.params.userId;
-  if (!userId) return res.status(400).send(responseMsg[400]);
+  const { lat, lng, range } = req.body;
+  if (!(userId && lat && lng && range))
+    return res.status(400).send(responseMsg[400]);
 
   let response = { store: [], like_count: 0 };
 
@@ -14,5 +17,7 @@ export default async function getRecList(req: Request, res: Response) {
     return res.send(response);
   }
 
-  const shops = await findRecord({ table: "Store" });
+  const stores = await findRecord({ table: "Store" });
+
+  stores.filter((e) => distance(e.latitude, e.longitude, lat, lng) <= range);
 }
