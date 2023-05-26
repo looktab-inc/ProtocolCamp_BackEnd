@@ -11,5 +11,23 @@ export default async function getLikes(req: Request, res: Response) {
     data: { user_id: user_id },
   });
 
-  return res.send(likeList);
+  const response = await Promise.all(
+    likeList.map(async (e) => {
+      const [storeInfo] = await findRecord({
+        table: "Store",
+        data: { id: e.store_id },
+      });
+      const res = new Object({
+        id: e.id,
+        user_id: e.user_id,
+        nft_address: e.nft_address,
+        storeInfo,
+      });
+
+      return res;
+    })
+  );
+
+  console.log(response);
+  return res.send(response);
 }
