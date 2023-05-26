@@ -9,7 +9,7 @@ import postLike from "../../functions/api/store/postLike";
 import storeRecommend from "../../functions/api/store/getStoreRecommend";
 import regRecData from "../../functions/api/store/regStoreRecommend";
 import getLikes from "../../functions/api/store/getLikes";
-import getRecList from "../../functions/api/store/getRecList";
+import getRecList from "../../functions/api/store/postRecList";
 
 const router: Router = express.Router();
 
