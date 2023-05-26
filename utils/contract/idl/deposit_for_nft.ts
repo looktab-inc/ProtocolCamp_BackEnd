@@ -91,11 +91,6 @@ export type DepositForNft = {
           "name": "clientAccount",
           "isMut": true,
           "isSigner": false
-        },
-        {
-          "name": "recommenderAccount",
-          "isMut": true,
-          "isSigner": false
         }
       ],
       "args": []
@@ -130,11 +125,6 @@ export type DepositForNft = {
         },
         {
           "name": "clientAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "recommenderAccount",
           "isMut": true,
           "isSigner": false
         }
@@ -338,11 +328,6 @@ export const IDL: DepositForNft = {
           "name": "clientAccount",
           "isMut": true,
           "isSigner": false
-        },
-        {
-          "name": "recommenderAccount",
-          "isMut": true,
-          "isSigner": false
         }
       ],
       "args": []
@@ -377,11 +362,6 @@ export const IDL: DepositForNft = {
         },
         {
           "name": "clientAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "recommenderAccount",
           "isMut": true,
           "isSigner": false
         }
