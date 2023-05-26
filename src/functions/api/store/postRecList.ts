@@ -26,6 +26,9 @@ export default async function getRecList(req: Request, res: Response) {
       data: { id: stores[i].store_id },
     });
     const dist = distance(storeInfo.latitude, storeInfo.longitude, lat, lng);
+    stores[i].distance = dist;
+    stores[i].store_address = storeInfo.address;
+    stores[i].store_name = storeInfo.name;
     if (dist < range) newstores.push(stores[i]);
   }
 
