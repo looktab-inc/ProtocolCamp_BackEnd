@@ -5,7 +5,7 @@ export interface createForm {
 
 export interface findForm {
   table: string;
-  data: object;
+  data?: object;
 }
 
 export interface updateForm {
