@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { createRecord, findRecord } from "../../../../utils/queryModules";
+import {
+  createRecord,
+  findRecord,
+  updateRecord,
+} from "../../../../utils/queryModules";
 import { responseMsg } from "../../../../utils/responseMsg";
 
 export default async function (req: Request, res: Response) {
@@ -23,6 +27,12 @@ export default async function (req: Request, res: Response) {
     const nft_address = likeData.nft_address;
 
     // 여기에 withdraw logic
+
+    const db_update_res = await updateRecord({
+      table: "Like",
+      data: { visited: true },
+      where: { id: like_id },
+    });
 
     const db_res = await createRecord({
       table: "Review",
