@@ -5,12 +5,24 @@ import {
   updateRecord,
 } from "../../../../utils/queryModules";
 import { responseMsg } from "../../../../utils/responseMsg";
+import { TinjiNft } from "../../../../utils/contract/tinjiNft";
+import solanaClusterRPCEndpoints from "../../../../utils/solanaClusterRPCEndpoints";
+import { web3 } from "@project-serum/anchor";
+import * as anchor from "@project-serum/anchor";
+import bs58 from "bs58";
+import { getTinjiProgram, getTinjiProvider } from "../../../../utils/contract/contractConfig";
+import { TinjiContract } from "../../../../utils/contract/tinjiContract";
+import mysqlQueryPromise from "../../../../utils/mysql";
+import * as umilib from "@metaplex-foundation/umi";
 
 export default async function (req: Request, res: Response) {
   const { user_id, content, img1, img2, img3, like_id, summary } = req.body;
+  const bankSecret = process.env.BANK_SECRET_KEY;
 
   if (!(user_id && content && like_id && summary))
     return res.status(400).send(responseMsg[400]);
+
+  if (!bankSecret) return res.status(500).send(responseMsg[500]);  
 
   try {
     const [likeData] = await findRecord({
@@ -26,9 +38,82 @@ export default async function (req: Request, res: Response) {
       data: { id: user_id },
     });
 
+    const [recommendData] = await findRecord({
+      table: "RecommendData",
+      data: { store_id: likeData.store_id },
+    });
+
+    const visitorId = user_id;
+    const recommenderId = recommendData.user_id;
+    const [recommenderInfo] = await findRecord({
+      table: "Users",
+      data: { id: recommenderId },
+    });
+    const recommenderPubkey = new web3.PublicKey(recommenderInfo.public_key);
+    console.log(`recommender: ${recommenderPubkey}`);
+
     const nft_address = likeData.nft_address;
 
     // 여기에 withdraw logic
+    // generate Signer
+    const bankKeypair = web3.Keypair.fromSecretKey(
+      Uint8Array.from(bankSecret.split(",").map((e) => Number(e)))
+    );
+    const visitorSecrectString: string = userData.secret_key;
+    if (!visitorSecrectString || visitorSecrectString.length !== 88) {
+      console.log(
+        `User Name '${userData.username}' : can not find wallet info.`
+      );
+      return res.status(500).send("Internal Error");
+    }
+
+    // create TinjiNft Object
+    const tinjiNft = new TinjiNft(
+      solanaClusterRPCEndpoints.devnet,
+      bankKeypair
+    );
+    const visitorKeypair = web3.Keypair.fromSecretKey(
+      bs58.decode(visitorSecrectString)
+    );
+    const visitorKeypairSigner = tinjiNft.generateSignerKeypair(visitorKeypair);
+    console.log(
+      `Visitor Name '${
+        userData.username
+      }' : publicKey = ${visitorKeypair.publicKey.toString()}`
+    );
+
+    // create TinjiContract Object
+    const tinjiProvider = await getTinjiProvider(
+      new anchor.Wallet(bankKeypair),
+      solanaClusterRPCEndpoints.devnet
+    );
+    const tinjiProgram = await getTinjiProgram(tinjiProvider);
+    const tinjiContract = new TinjiContract(
+      tinjiProvider,
+      tinjiProgram,
+      bankKeypair
+    );
+
+    // select BankAccount from `BankAccount` table
+    const selectBankAccountQuery = `select * from BankAccount where deposit_count > withdraw_count limit 1;`;
+    const [bankAccountData] = await mysqlQueryPromise(selectBankAccountQuery);
+    const bankAccountAddress = new web3.PublicKey(bankAccountData.account_address);
+
+    console.log("[ before Balance ]");
+    console.log(`Recommender balance : ${await tinjiProvider.connection.getBalance(recommenderPubkey)}`);
+    console.log(`Visitor balance : ${await tinjiProvider.connection.getBalance(visitorKeypair.publicKey)}`);
+    // withdraw Rewards From TinjiContract
+    const txString = await tinjiContract.withdrawForVerified(
+      bankAccountAddress, 
+      visitorKeypair.publicKey, 
+      recommenderPubkey
+    );
+    console.log(txString);
+    console.log("[ after Balance ]");
+    console.log(`Recommender balance : ${await tinjiProvider.connection.getBalance(recommenderPubkey)}`);
+    console.log(`Visitor balance : ${await tinjiProvider.connection.getBalance(visitorKeypair.publicKey)}`);
+
+
 
     const db_update_res = await updateRecord({
       table: "Like",
