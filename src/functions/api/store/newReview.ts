@@ -20,21 +20,17 @@ export default async function (req: Request, res: Response) {
   const { user_id, content, img1, img2, img3, like_id, summary } = req.body;
   const bankSecret = process.env.BANK_SECRET_KEY;
 
-  console.log(0);
-
   if (!(user_id && content && like_id && summary))
     return res.status(400).send(responseMsg[400]);
 
   if (!bankSecret) return res.status(500).send(responseMsg[500]);  
 
   try {
-    console.log(1);
     const [likeData] = await findRecord({
       table: "Like",
       data: { id: like_id },
     });
     if (!likeData) throw "No matching like data";
-    console.log(2);
     const store_id = likeData.store_id;
 
     const [userData] = await findRecord({
@@ -124,7 +120,6 @@ export default async function (req: Request, res: Response) {
 
     const rewardLogData = await rewardLog(recommenderId, visitorId, like_id);
     console.log(rewardLogData);
-
 
     const db_update_res = await updateRecord({
       table: "Like",
