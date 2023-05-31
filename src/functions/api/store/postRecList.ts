@@ -39,7 +39,7 @@ export default async function getRecList(req: Request, res: Response) {
   } else {
     while (storesCnt-- !== 0) {
       selectedStores.push(
-        newstores[Math.floor(Math.random() * newstores.length)]
+        ...newstores.splice(Math.floor(Math.random() * newstores.length), 1)
       );
     }
   }
