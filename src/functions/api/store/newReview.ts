@@ -14,10 +14,13 @@ import { getTinjiProgram, getTinjiProvider } from "../../../../utils/contract/co
 import { TinjiContract } from "../../../../utils/contract/tinjiContract";
 import mysqlQueryPromise from "../../../../utils/mysql";
 import * as umilib from "@metaplex-foundation/umi";
+import rewardLog from "../../../../utils/rewardLog";
 
 export default async function (req: Request, res: Response) {
   const { user_id, content, img1, img2, img3, like_id, summary } = req.body;
   const bankSecret = process.env.BANK_SECRET_KEY;
+
+  console.log(0);
 
   if (!(user_id && content && like_id && summary))
     return res.status(400).send(responseMsg[400]);
@@ -25,12 +28,13 @@ export default async function (req: Request, res: Response) {
   if (!bankSecret) return res.status(500).send(responseMsg[500]);  
 
   try {
+    console.log(1);
     const [likeData] = await findRecord({
       table: "Like",
       data: { id: like_id },
     });
     if (!likeData) throw "No matching like data";
-
+    console.log(2);
     const store_id = likeData.store_id;
 
     const [userData] = await findRecord({
@@ -52,9 +56,8 @@ export default async function (req: Request, res: Response) {
     const recommenderPubkey = new web3.PublicKey(recommenderInfo.public_key);
     console.log(`recommender: ${recommenderPubkey}`);
 
-    const nft_address = likeData.nft_address;
+    const nftAddress = likeData.nft_address;
 
-    // 여기에 withdraw logic
     // generate Signer
     const bankKeypair = web3.Keypair.fromSecretKey(
       Uint8Array.from(bankSecret.split(",").map((e) => Number(e)))
@@ -102,6 +105,7 @@ export default async function (req: Request, res: Response) {
     console.log("[ before Balance ]");
     console.log(`Recommender balance : ${await tinjiProvider.connection.getBalance(recommenderPubkey)}`);
     console.log(`Visitor balance : ${await tinjiProvider.connection.getBalance(visitorKeypair.publicKey)}`);
+
     // withdraw Rewards From TinjiContract
     const txString = await tinjiContract.withdrawForVerified(
       bankAccountAddress, 
@@ -113,6 +117,13 @@ export default async function (req: Request, res: Response) {
     console.log(`Recommender balance : ${await tinjiProvider.connection.getBalance(recommenderPubkey)}`);
     console.log(`Visitor balance : ${await tinjiProvider.connection.getBalance(visitorKeypair.publicKey)}`);
 
+    // burn NFT owned by user for creating review that means verification of visit.
+    console.log(`NFT address : ${nftAddress}`);
+    console.log(`VisitorKeypair : ${visitorKeypair.publicKey.toString()}`);
+    await tinjiNft.burnNft(umilib.publicKey(nftAddress));
+
+    const rewardLogData = await rewardLog(recommenderId, visitorId, like_id);
+    console.log(rewardLogData);
 
 
     const db_update_res = await updateRecord({
