@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
 
 const routersDir = __filename.split(".")[0];
 fs.readdirSync(routersDir)
-  .filter((f) => f.indexOf(".") !== 0 && f.slice(-9) === ".route.ts")
+  .filter((f) => f.indexOf(".") !== 0 && f.slice(-9) === ".route.js")
   .forEach((r) =>
     router.use(`/${r.split(".")[0]}`, require(`${routersDir}/${r}`).default)
   );
