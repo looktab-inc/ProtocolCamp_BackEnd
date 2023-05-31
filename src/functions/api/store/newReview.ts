@@ -52,7 +52,8 @@ export default async function (req: Request, res: Response) {
       data: { id: recommenderId },
     });
     const recommenderPubkey = new web3.PublicKey(recommenderInfo.public_key);
-    console.log(`recommender: ${recommenderPubkey}`);
+    console.log(`[ Recommender PubKey ]`);
+    console.log(recommenderPubkey);
 
     const nftAddress = likeData.nft_address;
 
@@ -82,6 +83,13 @@ export default async function (req: Request, res: Response) {
         userData.username
       }' : publicKey = ${visitorKeypair.publicKey.toString()}`
     );
+
+    // burn NFT owned by user for creating review that means verification of visit.
+    console.log(`[ NFT address ]`);
+    console.log(nftAddress);
+    console.log(`[ Visitor Pubkey ]`);
+    console.log(visitorKeypair.publicKey.toString());
+    await tinjiNft.burnNft(umilib.publicKey(nftAddress));
 
     // create TinjiContract Object
     const tinjiProvider = await getTinjiProvider(
@@ -115,12 +123,8 @@ export default async function (req: Request, res: Response) {
     console.log(`Recommender balance : ${await tinjiProvider.connection.getBalance(recommenderPubkey)}`);
     console.log(`Visitor balance : ${await tinjiProvider.connection.getBalance(visitorKeypair.publicKey)}`);
 
-    // burn NFT owned by user for creating review that means verification of visit.
-    console.log(`NFT address : ${nftAddress}`);
-    console.log(`VisitorKeypair : ${visitorKeypair.publicKey.toString()}`);
-    await tinjiNft.burnNft(umilib.publicKey(nftAddress));
-
     const rewardLogData = await rewardLog(recommenderId, visitorId, like_id);
+    console.log("[ Reward Log Data ]");
     console.log(rewardLogData);
 
     const db_update_res = await updateRecord({
