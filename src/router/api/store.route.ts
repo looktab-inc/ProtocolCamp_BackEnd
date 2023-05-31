@@ -21,7 +21,7 @@ router.route("/:userId/like").get(getLikes);
 
 // POST
 router.route("/").post(postStore);
-router.route("/:id/review").post(newReview);
+router.route("/review").post(newReview);
 router.route("/like").post(postLike);
 router.route("/:id/recreg").post(regRecData);
 router.route("/:userId/reclist").post(getRecList);
