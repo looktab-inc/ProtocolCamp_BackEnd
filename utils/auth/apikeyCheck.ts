@@ -4,6 +4,7 @@ import uuidAPIKey from "uuid-apikey";
 export default function apiAuth(req: Request) {
   try {
     const apikey = req.headers.authorization;
+    console.log(apikey);
     const keyRes = uuidAPIKey.check(apikey || "", process.env.UUID || "");
     const checkRes = !apikey || keyRes;
     return checkRes;
