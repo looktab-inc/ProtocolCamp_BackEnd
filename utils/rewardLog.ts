@@ -4,6 +4,9 @@ const rewardType = new Map();
 rewardType.set(0, "Visit");
 rewardType.set(1, "Recommend");
 
+const VISITOR_AMOUNT = 80;
+const RECOMMENDER_AMOUNT = 20;
+
 /**
  *
  * @param recommender_user_id
@@ -16,7 +19,6 @@ export default async function (
   recommender_user_id: string,
   visiter_user_id: string,
   like_id: number,
-  amount: number
 ) {
   try {
     const time = new Date();
@@ -36,7 +38,7 @@ export default async function (
       data: {
         user_id: visiter_user_id,
         comment: `${store.name} ${rewardType.get(0)} Reward`,
-        amount,
+        amount: VISITOR_AMOUNT,
         date: `${time.getFullYear()}-${
           time.getMonth() + 1
         }-${time.getDate()} ${time.getHours()}:${time.getMinutes()}:${
@@ -50,7 +52,7 @@ export default async function (
       data: {
         user_id: recommender_user_id,
         comment: `${store.name} ${rewardType.get(1)} Reward`,
-        amount,
+        amount: RECOMMENDER_AMOUNT,
         date: `${time.getFullYear()}-${
           time.getMonth() + 1
         }-${time.getDate()} ${time.getHours()}:${time.getMinutes()}:${
