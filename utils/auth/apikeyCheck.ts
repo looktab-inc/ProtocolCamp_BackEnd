@@ -1,5 +1,7 @@
 import { Request } from "express";
 import uuidAPIKey from "uuid-apikey";
+import dotenv from "dotenv";
+dotenv.config();
 
 export default function apiAuth(req: Request) {
   try {
