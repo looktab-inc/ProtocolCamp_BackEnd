@@ -72,16 +72,19 @@ export default async function (req: Request, res: Response) {
     const imgFilePath = recData.img1;
     const temp = imgFilePath.split("/");
     const fileName = temp[temp.length - 1];
-    console.log(`file Name : ${fileName}`);
+    console.log(`[ file Name ]`);
+    console.log(fileName);
 
     const fileBuf = fs.readFileSync(imgFilePath);
     const fileUri = await tinjiNft.uploadFile(fileBuf, fileName);
-    console.log(`File Uri : ${fileUri}`);
+    console.log(`[ File Uri ]`);
+    console.log(fileUri);
 
     // 2. upload Metadate
     const metadataName = "Test Metadata";
     const metadataUri = await tinjiNft.uploadMetadata([fileUri], metadataName);
-    console.log(`Metadata Uri : ${metadataUri}`);
+    console.log(`[ Metadata Uri ]`);
+    console.log(metadataUri);
 
     // 3. mint NFT
     const mintedNftSigner = await tinjiNft.mintNft(
@@ -89,7 +92,7 @@ export default async function (req: Request, res: Response) {
       metadataUri
     );
     const nft_address = umilib.base58PublicKey(mintedNftSigner.publicKey);
-    console.log(`Minted NFT Address : `);
+    console.log(`[ Minted NFT Address ]`);
     console.log(nft_address);
 
     // 4. deposit into Contract
