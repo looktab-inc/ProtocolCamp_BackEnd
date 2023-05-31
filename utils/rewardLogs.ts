@@ -16,9 +16,9 @@ const RECOMMENDER_AMOUNT = 20;
  * @returns
  */
 export default async function (
-  user_id: string,
+  recommender_user_id: string,
+  visiter_user_id: string,
   like_id: number,
-  amount: number,
 ) {
   try {
     const time = new Date();
@@ -33,12 +33,12 @@ export default async function (
     });
     if (!store) throw "No matching store";
 
-    const user_db_res = await createRecord({
+    const visiter_db_res = await createRecord({
       table: "rewardLog",
       data: {
-        user_id: user_id,
+        user_id: visiter_user_id,
         comment: `${store.name} ${rewardType.get(0)} Reward`,
-        amount: amount,
+        amount: VISITOR_AMOUNT,
         date: `${time.getFullYear()}-${
           time.getMonth() + 1
         }-${time.getDate()} ${time.getHours()}:${time.getMinutes()}:${
@@ -47,7 +47,21 @@ export default async function (
       },
     });
 
-    return { user: user_db_res };
+    const recommender_db_res = await createRecord({
+      table: "rewardLog",
+      data: {
+        user_id: recommender_user_id,
+        comment: `${store.name} ${rewardType.get(1)} Reward`,
+        amount: RECOMMENDER_AMOUNT,
+        date: `${time.getFullYear()}-${
+          time.getMonth() + 1
+        }-${time.getDate()} ${time.getHours()}:${time.getMinutes()}:${
+          time.getSeconds
+        }`,
+      },
+    });
+
+    return { visiter: visiter_db_res, recommender: recommender_db_res };
   } catch (e) {
     console.log(e);
     return null;
