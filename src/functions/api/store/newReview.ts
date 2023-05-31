@@ -7,10 +7,9 @@ import {
 import { responseMsg } from "../../../../utils/responseMsg";
 
 export default async function (req: Request, res: Response) {
-  const store_id = req.params.id;
   const { user_id, content, img1, img2, img3, like_id, summary } = req.body;
 
-  if (!(store_id && user_id && content && like_id && summary))
+  if (!(user_id && content && like_id && summary))
     return res.status(400).send(responseMsg[400]);
 
   try {
@@ -18,6 +17,9 @@ export default async function (req: Request, res: Response) {
       table: "Like",
       data: { id: like_id },
     });
+    if (!likeData) throw "No matching like data";
+
+    const store_id = likeData.store_id;
 
     const [userData] = await findRecord({
       table: "Users",

@@ -4,25 +4,38 @@ const rewardType = new Map();
 rewardType.set(0, "Visit");
 rewardType.set(1, "Recommend");
 
+/**
+ *
+ * @param recommender_user_id
+ * @param visiter_user_id
+ * @param like_id
+ * @param amount
+ * @returns
+ */
 export default async function (
-  type: number,
-  user_id: string,
-  store_id: string,
+  recommender_user_id: string,
+  visiter_user_id: string,
+  like_id: number,
   amount: number
 ) {
   try {
     const time = new Date();
+    const [like] = await findRecord({
+      table: "Like",
+      data: { id: like_id },
+    });
+    if (!like) throw "No matching Like";
     const [store] = await findRecord({
       table: "Store",
-      data: { id: store_id },
+      data: { id: like.store_id },
     });
     if (!store) throw "No matching store";
 
-    const db_res = await createRecord({
+    const visiter_db_res = await createRecord({
       table: "rewardLog",
       data: {
-        user_id,
-        comment: `${store.name} ${rewardType.get(type)} Reward`,
+        user_id: visiter_user_id,
+        comment: `${store.name} ${rewardType.get(0)} Reward`,
         amount,
         date: `${time.getFullYear()}-${
           time.getMonth() + 1
@@ -32,7 +45,21 @@ export default async function (
       },
     });
 
-    return db_res;
+    const recommender_db_res = await createRecord({
+      table: "rewardLog",
+      data: {
+        user_id: recommender_user_id,
+        comment: `${store.name} ${rewardType.get(1)} Reward`,
+        amount,
+        date: `${time.getFullYear()}-${
+          time.getMonth() + 1
+        }-${time.getDate()} ${time.getHours()}:${time.getMinutes()}:${
+          time.getSeconds
+        }`,
+      },
+    });
+
+    return { visiter: visiter_db_res, recommender: recommender_db_res };
   } catch (e) {
     console.log(e);
     return null;
