@@ -107,7 +107,7 @@ export default async function (req: Request, res: Response) {
       bankKeypair
     );
 
-    const selectBankAccountQuery = `select * from BankAccount where deposit_count > withdraw_count limit 1;`;
+    const selectBankAccountQuery = `select * from BankAccount limit 1;`;
     const [bankAccountData] = await mysqlQueryPromise(selectBankAccountQuery);
     let bankAccountAddress = "";
     if(bankAccountData == null || bankAccountData == undefined) {
