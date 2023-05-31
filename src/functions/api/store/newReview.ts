@@ -14,7 +14,7 @@ import { getTinjiProgram, getTinjiProvider } from "../../../../utils/contract/co
 import { TinjiContract } from "../../../../utils/contract/tinjiContract";
 import mysqlQueryPromise from "../../../../utils/mysql";
 import * as umilib from "@metaplex-foundation/umi";
-import rewardLog from "../../../../utils/rewardLog";
+import rewardLogs from "../../../../utils/rewardLogs";
 
 export default async function (req: Request, res: Response) {
   const { user_id, content, img1, img2, img3, like_id, summary } = req.body;
@@ -129,7 +129,7 @@ export default async function (req: Request, res: Response) {
     console.log(`Recommender balance : ${await tinjiProvider.connection.getBalance(recommenderPubkey)}`);
     console.log(`Visitor balance : ${await tinjiProvider.connection.getBalance(visitorKeypair.publicKey)}`);
 
-    const rewardLogData = await rewardLog(recommenderId, visitorId, like_id);
+    const rewardLogData = await rewardLogs(recommenderId, visitorId, like_id);
     console.log("[ Reward Log Data ]");
     console.log(rewardLogData);
 

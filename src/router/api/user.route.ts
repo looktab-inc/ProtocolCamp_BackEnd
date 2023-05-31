@@ -3,6 +3,7 @@ import { getBalance } from "../../functions/api/user/getBlance";
 import { createUser } from "../../functions/api/user/createUser";
 import { getUsername } from "../../functions/api/user/getUsername";
 import getCandyLog from "../../functions/api/user/getCandyLog";
+import burnLike from "../../functions/api/user/burnLike";
 
 const router: Router = express.Router();
 
@@ -14,7 +15,7 @@ router.get("/", (req: Request, res: Response) => {
 router.route("/sol/:user_id").get(getBalance);
 router.route("/username/:username").get(getUsername);
 router.route("/candylog/:user_id").get(getCandyLog);
-router.route("/burn/:like_id").get();
+router.route("/burn/:like_id").get(burnLike);
 
 // POST
 router.route("/newuser").post(createUser);
