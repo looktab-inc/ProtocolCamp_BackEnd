@@ -101,19 +101,18 @@ export class TinjiNft {
   }
 
   async burnNft(
-    ownerKeypair: web3.Keypair,
     mintPubkey: umilib.PublicKey
   ) {
     const ownerUmiKeypair = {
-      publicKey: umilib.publicKey(ownerKeypair.publicKey),
-      secretKey: new Uint8Array(ownerKeypair.secretKey),
+      publicKey: umilib.publicKey(this.bankKeypair.publicKey),
+      secretKey: new Uint8Array(this.bankKeypair.secretKey),
     };
-    const ownerSigner = createSignerFromKeypair(this.umi, ownerUmiKeypair);
-
+    const ownerKeypairSigner = createSignerFromKeypair(this.umi, ownerUmiKeypair);
+    
     const txResult = await mplMetadata.burnV1(this.umi, {
       mint: mintPubkey,
-      authority: ownerSigner,
-      tokenOwner: ownerSigner.publicKey,
+      authority: ownerKeypairSigner,
+      tokenOwner: ownerKeypairSigner.publicKey,
       tokenStandard: mplMetadata.TokenStandard.NonFungible
     }).sendAndConfirm(this.umi);
 
