@@ -14,6 +14,7 @@ router.get("/", (req: Request, res: Response) => {
 router.route("/sol/:user_id").get(getBalance);
 router.route("/username/:username").get(getUsername);
 router.route("/candylog/:user_id").get(getCandyLog);
+router.route("/burn/:like_id").get();
 
 // POST
 router.route("/newuser").post(createUser);
