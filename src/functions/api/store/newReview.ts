@@ -106,7 +106,13 @@ export default async function (req: Request, res: Response) {
     // select BankAccount from `BankAccount` table
     const selectBankAccountQuery = `select * from BankAccount where deposit_count > withdraw_count limit 1;`;
     const [bankAccountData] = await mysqlQueryPromise(selectBankAccountQuery);
-    const bankAccountAddress = new web3.PublicKey(bankAccountData.account_address);
+    let bankAccountAddress;
+    if(bankAccountData == null || bankAccountData == undefined) {
+      console.log("There are no bankAccounts that have enough deposits");
+      return res.status(500).send("Internal Error");
+    } else {
+      bankAccountAddress = new web3.PublicKey(bankAccountData.account_address);
+    }
 
     console.log("[ before Balance ]");
     console.log(`Recommender balance : ${await tinjiProvider.connection.getBalance(recommenderPubkey)}`);
@@ -126,6 +132,9 @@ export default async function (req: Request, res: Response) {
     const rewardLogData = await rewardLog(recommenderId, visitorId, like_id);
     console.log("[ Reward Log Data ]");
     console.log(rewardLogData);
+
+    const plusWithdrawQuery = `update BankAccount SET withdraw_count = withdraw_count + 1 where account_address = '${bankAccountAddress}'`;
+    const plusResult = await mysqlQueryPromise(plusWithdrawQuery);
 
     const db_update_res = await updateRecord({
       table: "Like",
