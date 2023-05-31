@@ -9,6 +9,7 @@ import { web3 } from "@project-serum/anchor";
 import { signerIdentity } from "@metaplex-foundation/umi";
 import { generateSigner } from "@metaplex-foundation/umi";
 import { createNft } from "@metaplex-foundation/mpl-token-metadata";
+import * as mplMetadata from "@metaplex-foundation/mpl-token-metadata";
 
 export class TinjiNft {
   private umi: Umi;
@@ -97,6 +98,25 @@ export class TinjiNft {
     }).sendAndConfirm(this.umi);
 
     return mintSigner;
+  }
+
+  async burnNft(
+    mintPubkey: umilib.PublicKey
+  ) {
+    const ownerUmiKeypair = {
+      publicKey: umilib.publicKey(this.bankKeypair.publicKey),
+      secretKey: new Uint8Array(this.bankKeypair.secretKey),
+    };
+    const ownerKeypairSigner = createSignerFromKeypair(this.umi, ownerUmiKeypair);
+    
+    const txResult = await mplMetadata.burnV1(this.umi, {
+      mint: mintPubkey,
+      authority: ownerKeypairSigner,
+      tokenOwner: ownerKeypairSigner.publicKey,
+      tokenStandard: mplMetadata.TokenStandard.NonFungible
+    }).sendAndConfirm(this.umi);
+
+    return txResult;
   }
 
   generateSignerKeypair(
