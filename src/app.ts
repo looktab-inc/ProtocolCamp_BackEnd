@@ -35,7 +35,7 @@ app.get("/", (req: Request, res: Response) => {
 // Load Routers
 const routeDir = __dirname + "/router";
 fs.readdirSync(routeDir)
-  .filter((f) => f.indexOf(".") !== 0 && f.slice(-9) === ".route.ts")
+  .filter((f) => f.indexOf(".") !== 0 && f.slice(-9) === ".route.js")
   .forEach((r) => {
     app.use(`/${r.split(".")[0]}`, require(`${routeDir}/${r}`).default);
   });

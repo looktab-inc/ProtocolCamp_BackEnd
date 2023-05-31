@@ -1,5 +1,5 @@
-import express, { Router, Request, Response, NextFunction } from 'express';
-import fs from 'fs';
+import express, { Router, Request, Response, NextFunction } from "express";
+import fs from "fs";
 
 const router: Router = express.Router();
 
@@ -17,23 +17,23 @@ const router: Router = express.Router();
 // });
 
 // Authorization : JWT
-import { verifyJWT } from '../../utils/auth/jwt';
+import { verifyJWT } from "../../utils/auth/jwt";
 router.use((req: Request, res: Response, next: NextFunction) => {
   const verificationRes = verifyJWT(req);
   if (verificationRes.status) next();
   else if (
     !verificationRes.status &&
-    verificationRes.code === 'TokenExpiredError'
+    verificationRes.code === "TokenExpiredError"
   ) {
-    return res.status(401).send('AccessTokenExpired');
-  } else return res.status(401).send('Unauthorized');
+    return res.status(401).send("AccessTokenExpired");
+  } else return res.status(401).send("Unauthorized");
 });
 
-const routersDir = __filename.split('.')[0];
+const routersDir = __filename.split(".")[0];
 fs.readdirSync(routersDir)
-  .filter((f) => f.indexOf('.') !== 0 && f.slice(-9) === '.route.ts')
+  .filter((f) => f.indexOf(".") !== 0 && f.slice(-9) === ".route.js")
   .forEach((r) =>
-    router.use(`/${r.split('.')[0]}`, require(`${routersDir}/${r}`).default)
+    router.use(`/${r.split(".")[0]}`, require(`${routersDir}/${r}`).default)
   );
 
 export default router;
