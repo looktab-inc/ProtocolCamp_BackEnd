@@ -107,9 +107,19 @@ export default async function (req: Request, res: Response) {
       bankKeypair
     );
 
-    const selectBankAccountQuery = `select * from BankAccount where deposit_count > withdraw_count limit 1;`;
+    const selectBankAccountQuery = `select * from BankAccount limit 1;`;
     const [bankAccountData] = await mysqlQueryPromise(selectBankAccountQuery);
-    const bankAccountAddress = bankAccountData.account_address;
+    let bankAccountAddress = "";
+    if(bankAccountData == null || bankAccountData == undefined) {
+      const bankAccountKeypair = web3.Keypair.generate();
+      await tinjiContract.initializeContract(bankAccountKeypair);
+      const insertBankAccountQuery = `insert into BankAccount (account_address) values('${bankAccountKeypair.publicKey.toString()}')`;
+      await mysqlQueryPromise(insertBankAccountQuery);
+
+      bankAccountAddress = bankAccountKeypair.publicKey.toString();
+    } else {
+      bankAccountAddress = bankAccountData.account_address;
+    }
 
     const txSig = await tinjiContract.depositForNFT(
       new web3.PublicKey(bankAccountAddress)
