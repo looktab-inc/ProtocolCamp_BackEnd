@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { responseMsg } from '../../../../utils/responseMsg';
 const postCampaign = async (req: Request, res: Response) => {
   const {
     title,
@@ -23,8 +24,10 @@ const postCampaign = async (req: Request, res: Response) => {
     !distance ||
     !nft_count ||
     !images
-  )
-    return res.status(400).send('Bad Request');
+  ) {
+    return res.status(400).send(responseMsg[400]);
+  }
+
   return res.send('GET /api/campaign');
 };
 
