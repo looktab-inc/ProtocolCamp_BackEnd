@@ -69,16 +69,19 @@ export default async function (req: Request, res: Response) {
     );
 
     // 1. upload File
-    const imgFilePath = recData.img1;
-    const temp = imgFilePath.split("/");
-    const fileName = temp[temp.length - 1];
-    console.log(`[ file Name ]`);
-    console.log(fileName);
+    // const imgFilePath = recData.img1;
+    // const temp = imgFilePath.split("/");
+    // const fileName = temp[temp.length - 1];
+    // console.log(`[ file Name ]`);
+    // console.log(fileName);
 
-    const fileBuf = fs.readFileSync(imgFilePath);
-    const fileUri = await tinjiNft.uploadFile(fileBuf, fileName);
-    console.log(`[ File Uri ]`);
-    console.log(fileUri);
+    // const fileBuf = fs.readFileSync(imgFilePath);
+    // const fileUri = await tinjiNft.uploadFile(fileBuf, fileName);
+    // console.log(`[ File Uri ]`);
+    // console.log(fileUri);
+
+    // 1. img1 URL DB 값으로
+    const fileUri = recData.img1;
 
     // 2. upload Metadate
     const metadataName = "Test Metadata";
