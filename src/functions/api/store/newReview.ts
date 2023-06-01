@@ -20,8 +20,6 @@ export default async function (req: Request, res: Response) {
   const { user_id, content, img1, img2, img3, like_id, summary } = req.body;
   const bankSecret = process.env.BANK_SECRET_KEY;
 
-  console.log(0);
-
   if (!(user_id && content && like_id && summary))
     return res.status(400).send(responseMsg[400]);
 
@@ -124,7 +122,6 @@ export default async function (req: Request, res: Response) {
 
     const rewardLogData = await rewardLog(recommenderId, visitorId, like_id);
     console.log(rewardLogData);
-
 
     const db_update_res = await updateRecord({
       table: "Like",
